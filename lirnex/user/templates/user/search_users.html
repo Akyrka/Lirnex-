@@ -1,0 +1,40 @@
+{% extends 'basic/home.html' %}
+{% load static %}
+
+{% block title %}Пошук користувачів{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <form method="get" class="search-form">
+        <input type="text" name="q" value="{{ query }}" placeholder="Введіть ім'я користувача...">
+        <button type="submit">🔍</button>
+    </form>
+
+    {% if query %}
+        <h3>Результати для: "{{ query }}"</h3>
+
+        {% if results %}
+            <ul class="search-results">
+                {% for profile in results %}
+                    <li>
+                        <a href="{% url 'user:profile' profile.user.username %}">
+                            {% if profile.photo_profile %}
+                                <img src="{{ profile.photo_profile.url }}" alt="Фото" width="40">
+                            {% else %}
+                                <img src="{% static 'icons/default-avatar.png' %}" width="40">
+                            {% endif %}
+                            {{ profile.user.username }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Нічого не знайдено 😔</p>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

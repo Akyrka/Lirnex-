@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.author.username }} — Пост</title>
+</head>
+<body>
+    <h1>{{ post.author.username }}</h1>
+    <p><strong>Дата:</strong> {{ post.created_at }}</p>
+    <p>{{ post.caption|linebreaks }}</p>
+
+    {% if post.media.all %}
+        <h3>Медиа:</h3>
+        {% for media in post.media.all %}
+            {% if media.is_image %}
+                <img src="{{ media.file.url }}" alt="" style="max-width:400px;">
+            {% elif media.is_video %}
+                <video controls style="max-width:400px;">
+                    <source src="{{ media.file.url }}" type="video/mp4">
+                    Ваш браузер не підтримує відео.
+                </video>
+            {% else %}
+                <a href="{{ media.file.url }}">{{ media.file.name }}</a>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+{% if request.user == post.author %}
+    <a href="{% url 'basic:post-delete' post.pk %}" style="color:red;">Видалити публікацію</a>
+{% endif %}
+<a href="{% url 'user:profile' request.user.username %}">повернутись</a>
+
+</body>
+</html>

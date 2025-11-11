@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Удаление публикации</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+            background-color: #fafafa;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .confirm {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .cancel {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Видалити публікацію?</h2>
+
+        <p>{{ object.caption }}</p>
+
+        {% for media in object.media.all %}
+            {% if media.is_image %}
+                <img src="{{ media.file.url }}" alt="Фото" style="max-width:300px; margin-top:10px;">
+            {% elif media.is_video %}
+                <video src="{{ media.file.url }}" controls style="max-width:300px; margin-top:10px;"></video>
+            {% endif %}
+        {% endfor %}
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="confirm">Видалити</button>
+            <a href="{% url 'basic:post_detail' object.pk %}" class="cancel">Скасувати</a>
+        </form>
+    </div>
+</body>
+</html>
