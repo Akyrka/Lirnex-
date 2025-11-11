@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
-from django.views.generic import FormView, DetailView, ListView
+from django.views.generic import FormView, DetailView, ListView, View
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -13,6 +13,20 @@ from user import models
 from basic.models import Post
 from .forms import CustomUserCreationForm
 
+
+class SubscribeView(LoginRequiredMixin, View):
+    def post(self, request, username, *args, **kwargs):
+        target_user = get_object_or_404(User, username=username)
+        if target_user != request.user:
+            request.user.profile.following.add(target_user.profile)
+        return redirect('user:profile', username=username)
+
+class UnsubscribeView(LoginRequiredMixin, View):
+    def post(self, request, username, *args, **kwargs):
+        target_user = get_object_or_404(User, username=username)
+        if target_user != request.user:
+            request.user.profile.following.remove(target_user.profile)
+        return redirect('user:profile', username=username)
 
 class ProfileView(DetailView):
     model = models.Profile

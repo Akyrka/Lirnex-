@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CustomLoginView, RegisterView, UserLogoutView, ProfileView, SearchUsersView
+from .views import CustomLoginView, RegisterView, UserLogoutView, ProfileView, SearchUsersView, SubscribeView, UnsubscribeView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -12,7 +12,8 @@ urlpatterns = [
     path("logout/", UserLogoutView.as_view(), name="logout"),
     path("profile/<str:username>/", ProfileView.as_view(), name = "profile"),
     path('search/', SearchUsersView.as_view(), name='search_users'),
-
+    path('subscribe/<str:username>/', SubscribeView.as_view(), name='subscribe'),
+    path('unsubscribe/<str:username>/', UnsubscribeView.as_view(), name='unsubscribe'), 
 ]
 
 

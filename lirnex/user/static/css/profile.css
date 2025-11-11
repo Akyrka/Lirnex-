@@ -2,10 +2,22 @@
     text-align: right;
     margin-bottom: 20px;
 }
+
+.container{
+    margin-left: 18%;
+}
+
+.bio{
+    align-items: center;
+}
+
+.profile-tag{
+    align-items: center;
+}
  .posts {
     display: flex;
-    flex-wrap: wrap;
-    /* gap: 15px; */
+    flex-wrap: wrap;    
+
 }
  .post {
     background: white;

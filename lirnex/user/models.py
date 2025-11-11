@@ -8,7 +8,7 @@ class Profile(models.Model):
     photo_profile = models.ImageField(upload_to='profile_photos/',  default='profile_photos/default.png',blank=True)
     birthday = models.DateField(blank=True, null=True)
     create_at = models.DateTimeField(auto_now_add=True)
-     
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
 #class CurrentStories(models.Model):
 

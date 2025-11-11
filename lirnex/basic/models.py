@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -19,11 +20,6 @@ class Post(models.Model):
 class Media(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='media')
     file = models.FileField(upload_to='uploads/', null=True, blank=True)
-    
-    def delete(self, *args, **kwargs):
-        if self.file:
-            self.file.delete(save=False)
-        super().delete(*args, **kwargs)
 
 
     def is_image(self):
@@ -34,6 +30,10 @@ class Media(models.Model):
 
     def __str__(self):
         return f"Media for Post {self.post.id}"
+@receiver(post_delete, sender=Media)
+def delete_media_file(sender, instance, **kwargs):
+    if instance.file:
+        instance.file.delete(False)
     
 # class Stories(models.Model):
 
