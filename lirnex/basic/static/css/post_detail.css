@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #fafafa;
+    color: #333;
+    padding: 30px;
+}
+.post {
+    width: 100%;              /* занимает всю ширину контейнера */
+    max-width: 450px;         /* ограничение, если нужно */
+    margin: 0 auto;           /* центрирование */
+    overflow: hidden;         /* на всякий случай */
+}
+.post img {
+    width: 100%;              /* растягивается под ширину поста */
+    height: auto;             /* сохраняет пропорции */
+    object-fit: contain;      /* гарантирует, что не обрежется */
+    display: block;
+}
+a {
+    color: #0095f6;
+    text-decoration: none;
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+a:hover {
+    background-color: rgba(0, 149, 246, 0.1);
+    text-decoration: none;
+}
+
+.delete {
+    color: red;
+    font-weight: bold;
+}
+
+.delete:hover {
+    text-decoration: underline;
+}

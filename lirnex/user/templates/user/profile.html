@@ -1,10 +1,13 @@
-{% extends 'basic/home.html' %}
-{% load static%}
-{% block title %}Профіль {{ profile.user.username }}{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/profile.css' %}">
-{% endblock %}
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Lirnex{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
 
 <body>
 {% block content %}
@@ -15,48 +18,97 @@
     </form>
 {% endif %}
 
-<div class="container">
-    <div class="profile-tag" style=" align-items: center; gap: 20px;">
-        {% if profile.photo_profile %}
-            <img src="{{ profile.photo_profile.url }}" alt="Фото профиля" style="width:150px; height:150px; border-radius:50%; object-fit:cover;">
+<div class="layout">
+    <div class="sidebar">
+        <h2 class="logo">Lirnex</h2>
+
+        <a href="{% url 'basic:home' %}" class="menu-item">
+            <img src="{% static 'icons/home.png' %}" alt="">
+            <span>Головна</span>
+        </a>
+
+        <a href="{% url 'user:search_users' %}" class="menu-item">
+            <img src="{% static 'icons/search.png' %}" alt="">
+            <span>Пошук</span>
+        </a>
+
+        <a href="#" class="menu-item">
+            <img src="{% static 'icons/messages.png' %}" alt="">
+            <span>Повідомлення</span>
+        </a>
+
+        <a href="#" class="menu-item">
+            <img src="{% static 'icons/notification.png' %}" alt="">
+            <span>Сповіщення</span>
+        </a>
+
+        <a href="{% url 'basic:post-create' %}" class="menu-item">
+            <img src="{% static 'icons/plus.png' %}" alt="">
+            <span>Створити</span>
+        </a>
+        
+
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'user:profile' username=request.user.username %}" class="menu-item">
+                {% if request.user.profile.photo_profile %}
+                    <img src="{{ request.user.profile.photo_profile.url }}" class="profile-pic" alt="">
+                {% else %}
+                    <img src="{% static 'icons/default-avatar.png' %}" class="profile-pic" alt="">
+                {% endif %}
+                <span>Профіль</span>
+            </a>
         {% else %}
-            <img src="/static/default-avatar.png" alt="Без фото" style="width:150px; height:150px; border-radius:50%;">
-        {% endif %}
-        <div class="bio">
-            <h1>{{ profile.user.username }}</h1>
-            {% if profile.bio != none %}
-                <h3>{{ profile.bio }}</h3>
-            {% else %}
-                <h3>нічого</h3>
-            {% endif %}
-            <h3>Підписки: {{ request.user.profile.following.count }}</h3>
-            <h3>Підписники: {{ request.user.profile.followers.count }}</h3>
-        </div>
-        {% if request.user != profile.user %}
-            {% if profile in request.user.profile.following.all %}
-                <form method="post" action="{% url 'user:unsubscribe' profile.user.username %}">
-                    {% csrf_token %}
-                    <button>Відписатися</button>
-                </form>
-            {% else %}
-                <form method="post" action="{% url 'user:subscribe' profile.user.username %}">
-                    {% csrf_token %}
-                    <button>Підписатися</button>
-                </form>
-            {% endif %}
+            <a href="{% url 'user:register'%}" class="menu-item">
+                <span style="background-color:rgb(0,145,255); padding:10px; border-radius:10px;">
+                    Зареєструватися
+                </span>
+            </a>
         {% endif %}
     </div>
 
+<div class="container">
+        <div class="profile-tag" style=" align-items: center; gap: 20px;">
+            {% if profile.photo_profile %}
+                <img src="{{ profile.photo_profile.url }}" alt="Фото профиля" style="width:150px; height:150px; border-radius:50%; object-fit:cover;">
+            {% else %}
+                <img src="/static/default-avatar.png" alt="Без фото" style="width:150px; height:150px; border-radius:50%;">
+            {% endif %}
+            <div class="bio">
+                <h1>{{ profile.user.username }}</h1>
+                {% if profile.bio != none %}
+                    <h3>{{ profile.bio }}</h3>
+                {% else %}
+                    <h3>нічого</h3>
+                {% endif %}
+            
+                <div class="followers">
+                    <h3>Підписки: {{ request.user.profile.following.count  }}  Підписники: {{ request.user.profile.followers.count }}</h3>
 
-
-
-
+                {% if request.user != profile.user %}
+                    {% if profile in request.user.profile.following.all %}
+                        <form method="post" action="{% url 'user:unsubscribe' profile.user.username %}">
+                            <div class="button-follow"> {%csrf_token %}
+                            <button>Відписатися</button>
+                        </div>
+                        </form>
+                    {% else %}
+                        <form method="post" action="{% url 'user:subscribe' profile.user.username %}">
+                            <div class="button-follow">{% csrf_token %}
+                            <button>Підписатися</button>
+                            </div>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            
+                </div>
+        </div>
+    </div>
 
         {% if posts %}
             <div class="posts">
         {% for post in posts %}
             <a href="{% url 'basic:post_detail' post.pk %}" class="post-link">
-                <div class="post">
+                <div class="post-profile">
 
                     {% for media in post.media.all %}
                         {% if media.is_image %}
@@ -69,6 +121,7 @@
             </a>
         {% endfor %}
 
+    </div>
 </div>
 
     {% else %}
@@ -76,3 +129,5 @@
     {% endif %}
 {% endblock %}
 </body>
+</head>
+</html>

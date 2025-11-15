@@ -1,25 +1,71 @@
+ 
+ body {
+    font-family: sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fafafa;
+}
  form {
     text-align: right;
     margin-bottom: 20px;
 }
 
-.container{
-    margin-left: 18%;
+.container {
+    margin-left: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.bio{
+
+.profile-tag {
+    width: 100%;
+    display: flex;
     align-items: center;
+    justify-content: center; /* центрируем только аву и имя */
+    gap: 30px;
+    margin-bottom: 30px;
+    margin-left: -10%;
 }
 
-.profile-tag{
-    align-items: center;
+.profile-tag img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
 }
+
+.bio {
+    display: flex;
+    flex-direction: column;      
+    justify-content: center;
+}
+.followers{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    /* justify-content: center; */
+    /* text-align: center; */
+}
+.button-follow button {
+    padding: 6px 14px;
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
  .posts {
     display: flex;
     flex-wrap: wrap;    
 
 }
- .post {
+ .post-profile {
     background: white;
     border: 1px solid #ccc;
     padding: 0;
@@ -31,7 +77,7 @@
     align-items: center;
     justify-content: center;
 }
- .post img, .post video {
+ .post-profile img, .post video {
     width: 100%;
     height: 100%;
     object-fit: cover; /* вот это делает магию — заполняет всю карточку */
@@ -45,11 +91,11 @@
     color: #777;
     font-size: 12px;
 }
-.post-link {
+.post-profile-link {
     text-decoration: none;
     color: inherit;
 }
- .post-link:hover .post {
+ .post-profile-link:hover .post {
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     transform: translateY(-1px);
     transition: 0.2s;
@@ -61,7 +107,7 @@
     left: 0;
     width: 250px;
     height: 100vh;
-    background: fafafa;
+
     color: rgb(20, 131, 235);
     padding: 20px 10px;
     display: flex;
@@ -69,6 +115,32 @@
     align-items: flex-start;
     gap: 15px;
 }
+/* При сужении экрана */
+@media (max-width: 1000px) {
+
+    .sidebar {
+        width: 80px;
+        padding-left: 10px;
+    }
+
+    /* скрываем текст меню */
+    .sidebar .menu-item span {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+    }
+
+    /* центрируем иконки */
+    .sidebar .menu-item {
+        justify-content: center;
+    }
+
+    /* скрываем текстовый логотип */
+    .logo {
+        display: none;
+    }
+}
+
 
 .logo {
     font-family: 'Billabong', cursive;

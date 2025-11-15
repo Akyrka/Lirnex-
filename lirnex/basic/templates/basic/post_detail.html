@@ -1,34 +1,31 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <title>{{ post.author.username }} — Пост</title>
+    <link rel="stylesheet" href="{% static 'css/post_detail.css' %}">
+
+
 </head>
 <body>
-    <h1>{{ post.author.username }}</h1>
-    <p><strong>Дата:</strong> {{ post.created_at }}</p>
+<div class="post">
+    <h2>{{ post.author.username }}</h2>
+    <p><strong>Дата:</strong> {{ post.created_at|date:"d.m.Y H:i" }}</p>
     <p>{{ post.caption|linebreaks }}</p>
 
-    {% if post.media.all %}
-        <h3>Медиа:</h3>
-        {% for media in post.media.all %}
-            {% if media.is_image %}
-                <img src="{{ media.file.url }}" alt="" style="max-width:400px;">
-            {% elif media.is_video %}
-                <video controls style="max-width:400px;">
-                    <source src="{{ media.file.url }}" type="video/mp4">
-                    Ваш браузер не підтримує відео.
-                </video>
-            {% else %}
-                <a href="{{ media.file.url }}">{{ media.file.name }}</a>
-            {% endif %}
-        {% endfor %}
+    {% for media in post.media.all %}
+        {% if media.is_image %}
+            <img src="{{ media.file.url }}" alt="">
+        {% elif media.is_video %}
+            <video src="{{ media.file.url }}" controls></video>
+        {% endif %}
+    {% endfor %}
+
+    {% if request.user == post.author %}
+        <a href="{% url 'basic:post-delete' post.pk %}" class="delete">Видалити</a> 
     {% endif %}
-
-{% if request.user == post.author %}
-    <a href="{% url 'basic:post-delete' post.pk %}" style="color:red;">Видалити публікацію</a>
-{% endif %}
-<a href="{% url 'user:profile' request.user.username %}">повернутись</a>
-
+    <a href="{% url 'user:profile' request.user.username %}">Повернутись</a>
+</div>
 </body>
 </html>

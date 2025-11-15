@@ -7,6 +7,26 @@ body {
     background: #fafafa;
 }
 
+.post {
+    width: 100%;              /* занимает всю ширину контейнера */
+    max-width: 450px;         /* ограничение, если нужно */
+    margin: 0 auto;           /* центрирование */
+    overflow: hidden;         /* на всякий случай */
+}
+.post img {
+    width: 100%;              /* растягивается под ширину поста */
+    height: auto;             /* сохраняет пропорции */
+    object-fit: contain;      /* гарантирует, что не обрежется */
+    display: block;
+}
+
+.creator{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+}
+
 .sidebar {
     position: fixed;
     top: 0;

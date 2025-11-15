@@ -1,11 +1,19 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, Media
 from basic import models
+from user.models import Profile
 from .forms import PostForm, MediaFormSet
 from django.urls import reverse
+
+
+
+
+# class FriendRecommendationsView(TemplateView):
+#     template_name = "basic/home.html"
+
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -60,6 +68,54 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse("user:profile", kwargs={"username": self.request.user.username})
 
+# class BasicHomeView(ListView):
+#     model = models.Post
+#     template_name="basic/home.html"
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+
+#         if self.request.user.is_authenticated:
+#             user_profile = self.request.user.profile
+
+#             # Взаимные подписки (друзья)
+#             # friends = user_profile.following.filter(id__in=user_profile.followers.all())
+
+#             # Исключаем текущего пользователя и ограничиваем 5
+#             recommended = user_profile.following.all()[:5]
+
+#             context['recommended'] = recommended
+#         else:
+#             # Если аноним — рекомендации пустые
+#             context['recommended'] = []
+
+#         return context
+from django.db.models import Q
+
 class BasicHomeView(ListView):
-    model = models.Post
-    template_name="basic/home.html"
+    model = Post
+    template_name = "basic/home.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        """Получаем посты пользователей, на которых подписан текущий пользователь"""
+        if self.request.user.is_authenticated:
+            user_profile = self.request.user.profile
+            following_profiles = user_profile.following.all()  # подписки
+
+            # Посты авторов, на которых подписан текущий пользователь
+            return Post.objects.filter(author__profile__in=following_profiles).order_by('-created_at')
+        else:
+            return Post.objects.none()  # если аноним — ничего не показываем
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.user.is_authenticated:
+            user_profile = self.request.user.profile
+            # Подписки для блока рекомендаций
+            context['recommended'] = user_profile.following.all()[:5]
+        else:
+            context['recommended'] = []
+
+        return context
