@@ -1,0 +1,23 @@
+from rest_framework import serializers
+from .models import Profile
+
+class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+
+    following_count = serializers.SerializerMethodField()
+    followers_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile
+        fields = [
+            "user","photo_profile", "username", "first_name", "last_name", 
+            "birthday", "bio", "following_count", "followers_count"
+        ]
+
+    def get_following_count(self, obj):
+        return obj.following.count() 
+
+    def get_followers_count(self, obj):
+        return obj.followers.count() 

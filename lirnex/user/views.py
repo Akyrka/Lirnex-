@@ -9,9 +9,24 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 
 
+
 from user import models
 from basic.models import Post
 from .forms import CustomUserCreationForm
+
+from rest_framework import generics
+from .models import Profile
+from .serializers import ProfileSerializer
+
+# Список всех профилей и создание нового
+class ProfileListAPI(generics.ListCreateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+# Детали одного профиля по ID
+class ProfileDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
 
 
 class SubscribeView(LoginRequiredMixin, View):

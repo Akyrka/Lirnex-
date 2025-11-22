@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CustomLoginView, RegisterView, UserLogoutView, ProfileView, SearchUsersView, SubscribeView, UnsubscribeView
+from .views import CustomLoginView, RegisterView, UserLogoutView, ProfileView, SearchUsersView, SubscribeView, UnsubscribeView,ProfileListAPI, ProfileDetailAPI
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -14,6 +14,9 @@ urlpatterns = [
     path('search/', SearchUsersView.as_view(), name='search_users'),
     path('subscribe/<str:username>/', SubscribeView.as_view(), name='subscribe'),
     path('unsubscribe/<str:username>/', UnsubscribeView.as_view(), name='unsubscribe'), 
+
+    path('api/profiles/', ProfileListAPI.as_view(), name='profiles-list-api'),
+    path('api/profiles/<int:pk>/', ProfileDetailAPI.as_view(), name='profile-detail-api'),
 ]
 
 

@@ -1,0 +1,85 @@
+{% extends 'basic/home.html' %}
+
+{% block title %}Lirnex{% endblock %}
+
+{% block content %}
+
+<h3 style="text-align: center;">Пости користувачів, на яких ви підписані</h3>
+
+<div class="feed-container">
+{% for post in posts %}
+<div class="post">
+    <div class="creator">
+        <h4>
+            <img src="{{ post.author.profile.photo_profile.url }}" class="profile-pic"
+                 style="width:30px; height:30px; border-radius:50%;">
+        </h4>
+        <a href="{% url 'user:profile' post.author.username %}">
+            {{ post.author.username }}
+        </a>
+    </div>
+
+    {% for media in post.media.all %}
+        {% if media.is_image %}
+            <img src="{{ media.file.url }}" alt="" style="max-width:400px;">
+        {% elif media.is_video %}
+            <video controls style="max-width:400px;">
+                <source src="{{ media.file.url }}" type="video/mp4">
+            </video>
+        {% endif %}
+    {% endfor %}
+
+    {# Кнопка лайку #}
+    <button class="like-btn" 
+            data-id="{{ post.id }}" 
+            style="color: {% if post.liked_by_user %}red{% else %}black{% endif %};">
+        ❤️ <span class="like-count">{{ post.likes.count }}</span>
+    </button>
+
+    <p>{{ post.caption|linebreaks }}</p>
+</div>
+{% empty %}
+<p style="text-align: center;">Поки що немає постів.</p>
+{% endfor %}
+</div>
+
+<script>
+document.querySelectorAll(".like-btn").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        const postId = this.dataset.id;
+        const button = this;
+
+        fetch(`/post/${postId}/like/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie('csrftoken'),
+                "Accept": "application/json",
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            button.querySelector(".like-count").textContent = data.likes_count;
+            button.style.color = data.liked ? "red" : "black";
+        })
+        .catch(err => console.error("Error:", err));
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+{% endblock %}

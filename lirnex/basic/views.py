@@ -1,5 +1,7 @@
-from django.shortcuts import redirect, render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, Media
@@ -7,6 +9,7 @@ from basic import models
 from user.models import Profile
 from .forms import PostForm, MediaFormSet
 from django.urls import reverse
+from django.db.models import Q
 
 
 
@@ -68,33 +71,11 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse("user:profile", kwargs={"username": self.request.user.username})
 
-# class BasicHomeView(ListView):
-#     model = models.Post
-#     template_name="basic/home.html"
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-
-#         if self.request.user.is_authenticated:
-#             user_profile = self.request.user.profile
-
-#             # Взаимные подписки (друзья)
-#             # friends = user_profile.following.filter(id__in=user_profile.followers.all())
-
-#             # Исключаем текущего пользователя и ограничиваем 5
-#             recommended = user_profile.following.all()[:5]
-
-#             context['recommended'] = recommended
-#         else:
-#             # Если аноним — рекомендации пустые
-#             context['recommended'] = []
-
-#         return context
-from django.db.models import Q
 
 class BasicHomeView(ListView):
     model = Post
-    template_name = "basic/home.html"
+    template_name = "basic/home_page.html"
     context_object_name = "posts"
 
     def get_queryset(self):
@@ -104,7 +85,12 @@ class BasicHomeView(ListView):
             following_profiles = user_profile.following.all()  # подписки
 
             # Посты авторов, на которых подписан текущий пользователь
-            return Post.objects.filter(author__profile__in=following_profiles).order_by('-created_at')
+            qs = Post.objects.filter(author__profile__in=following_profiles).order_by('-created_at')
+
+            # Добавляем атрибут liked_by_user для шаблона
+            for post in qs:
+                post.liked_by_user = post.likes.filter(pk=self.request.user.pk).exists()
+            return qs
         else:
             return Post.objects.none()  # если аноним — ничего не показываем
 
@@ -119,3 +105,23 @@ class BasicHomeView(ListView):
             context['recommended'] = []
 
         return context
+
+
+class LikePostView(View):
+    def post(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        if user in post.likes.all():
+            post.likes.remove(user)
+            liked = False
+        else:
+            post.likes.add(user)
+            liked = True
+
+        return JsonResponse({
+            'liked': liked,
+            'likes_count': post.likes.count()
+        })
+
+

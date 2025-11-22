@@ -4,11 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Lirnex{% endblock %}</title>
+
+
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 <div class="layout">
+
+    <!-- Боковое меню -->
     <div class="sidebar">
         <h2 class="logo">Lirnex</h2>
 
@@ -47,7 +53,7 @@
                 <span>Профіль</span>
             </a>
         {% else %}
-            <a href="{% url 'user:register'%}" class="menu-item">
+            <a href="{% url 'user:register' %}" class="menu-item">
                 <span style="background-color:rgb(0,145,255); padding:10px; border-radius:10px;">
                     Зареєструватися
                 </span>
@@ -55,33 +61,10 @@
         {% endif %}
     </div>
 
-    <!-- <main class="main-content"> -->
-
-<h3 style="text-align: center;">Пости користувачів, на яких ви підписані</h3>
-
-{% for post in posts %}
-    <div class="post">
-        <div class="creator">
-            <h4><img src="{{ request.user.profile.photo_profile.url }}" class="profile-pic" style="width:30px; height:30px; border-radius:50%; "></h4>
-            <a href="{% url 'user:profile' post.author.username %}">{{ post.author.username }}</a>
-        </div>
-
-        {% for media in post.media.all %}
-            {% if media.is_image %}
-                <img src="{{ media.file.url }}" alt="" style="max-width:400px;">
-            {% elif media.is_video %}   
-                <video controls style="max-width:400px;">
-                    <source src="{{ media.file.url }}" type="video/mp4">
-                    Ваш браузер не підтримує відео.
-                </video>
-            {% endif %}
-            <p>{{ post.caption|linebreaks }}</p>
-        {% endfor %}
-    </div>
-{% empty %}
-    <p>Поки що немає постів.</p>
-{% endfor %}
-
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
 
 </div>
 </body>
