@@ -1,0 +1,27 @@
+{% extends 'basic/home.html' %}
+
+{% block title %}Lirnex{% endblock %}
+
+{% block content %}
+
+<h2>Уведомления</h2>
+
+{% for n in notifications %}
+<div style="gap: 18px">
+    <div class="notif {% if not n.is_read %}new{% endif %}">
+        {% if n.notif_type == "like" %}
+            ❤️ <a href="{% url 'basic:post_detail' n.post.pk %}">{{ n.from_user.username }}</a> лайкнул ваш пост
+        {% elif n.notif_type == "comment" %}
+            💬 <a href="{% url 'basic:post_detail' n.post.pk %}">{{ n.from_user.username }}</a> прокомментировал: {{ n.text }}
+        {% elif n.notif_type == "follow" %}
+            👤 <a href="{% url 'basic:post_detail' n.post.pk %}">{{ n.from_user.username }}</a> подписался на вас
+        {% endif %}
+        <br>
+        <small>{{ n.created_at }}</small>
+    </div>
+{% empty %}
+    <p>Пока нет уведомлений</p>
+{% endfor %}
+</div>
+
+{% endblock %}

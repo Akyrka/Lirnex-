@@ -1,0 +1,40 @@
+{% extends "basic/home.html" %}
+{% load static %}
+
+{% block title %}Редагування профілю — {{ request.user.username }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>Редагування профілю</h2>
+
+<form method="POST" enctype="multipart/form-data" class="profile-edit-form">
+    {% csrf_token %}
+    
+    <div style="margin-bottom: 15px;">
+        <label for="id_photo_profile">Фото профілю:</label><br>
+        {{ form.photo_profile }}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="id_bio">Біо:</label><br>
+        {{ form.bio }}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="id_birthday">Дата народження:</label><br>
+        {{ form.birthday }}
+    </div>
+
+    <button type="submit" style="padding: 8px 15px; background:#0095f6; color:white; border:none; border-radius:5px;">
+        Зберегти
+    </button>
+</form>
+
+<a href="{% url 'user:profile' request.user.username %}" style="display:block; margin-top:20px;">
+    ← Повернутись до профілю
+</a>
+
+{% endblock %}

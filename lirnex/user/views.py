@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
-from django.views.generic import FormView, DetailView, ListView, View
+from django.views.generic import FormView, DetailView, ListView, View, UpdateView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -12,7 +12,7 @@ from django.db.models import Q
 
 from user import models
 from basic.models import Post
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ProfileForm
 
 from rest_framework import generics
 from .models import Profile
@@ -84,7 +84,7 @@ class CustomLoginView(LoginView):
     authentication_form = AuthenticationForm
 
     def get_success_url(self):
-        return reverse_lazy("basic:home")
+        return reverse_lazy("basic:home") 
 
 
 class UserLogoutView(LogoutView):
@@ -108,3 +108,14 @@ class SearchUsersView(ListView):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('q', '')
         return context
+    
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    form_class = ProfileForm
+    template_name = 'user/update_profile.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
+
+    def get_success_url(self):
+        return self.request.user.profile.get_absolute_url()

@@ -1,8 +1,11 @@
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
+from django.conf import settings
 
-class UserIsOwnerMixin:
+class LoginRequiredMixinCustom:
+    login_url = settings.LOGIN_URL
+
     def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        if obj.creator != request.user:
-            raise PermissionDenied  # доступ запрещён
+        if not request.user.is_authenticated:
+            return redirect(self.login_url)
         return super().dispatch(request, *args, **kwargs)

@@ -124,4 +124,38 @@ class LikePostView(View):
             'likes_count': post.likes.count()
         })
 
+#Comment
+class AddCommentView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Post, pk=pk)
+        text = request.POST.get("text", "").strip()
 
+        if not text:
+            return JsonResponse({"error": "Комментарий пустой"}, status=400)
+
+        # Сохраняем объект в переменную
+        comment = models.Comment.objects.create(
+            post=post,
+            user=request.user,
+            text=text
+        )
+
+        return JsonResponse({
+            "id": comment.id,
+            "username": request.user.username,
+            "text": comment.text,
+            "delete_url": reverse('basic:delete_comment', args=[comment.id])
+        })
+    
+class DeleteCommentView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        comment = get_object_or_404(models.Comment, pk=pk)
+        if comment.user == request.user:
+            comment.delete()
+            return JsonResponse({"success": True, "comment_id": pk})
+        return JsonResponse({"success": False, "error": "Нет прав"}, status=403)
+    
+class NotificationsView(LoginRequiredMixin, View):
+    def get(self, request):
+        notifications = request.user.notifications.order_by('-created_at')
+        return render(request, "basic/notifications.html", {"notifications": notifications})
