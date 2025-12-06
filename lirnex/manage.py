@@ -2,6 +2,9 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+print("PYTHONPATH =", sys.path)
+print("FILES:", os.listdir('.'))
+
 
 
 def main():
