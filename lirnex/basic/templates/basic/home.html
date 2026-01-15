@@ -14,8 +14,8 @@
 <body>
 <div class="layout">
 
-    <!-- Боковое меню -->
-    <div class="sidebar">
+    <!-- Sidebar -->
+    <aside class="sidebar">
         <h2 class="logo">Lirnex</h2>
 
         <a href="{% url 'basic:home' %}" class="menu-item">
@@ -33,9 +33,13 @@
             <span>Повідомлення</span>
         </a>
 
-        <a href="{%url 'basic:notifications'%}" class="menu-item">
+        <a href="{% url 'basic:notifications' %}" class="menu-item notification-link">
             <img src="{% static 'icons/notification.png' %}" alt="">
             <span>Сповіщення</span>
+
+            {% if unread_notifications > 0 %}
+                <span class="notif-dot"></span>
+            {% endif %}
         </a>
 
         <a href="{% url 'basic:post-create' %}" class="menu-item">
@@ -53,19 +57,18 @@
                 <span>Профіль</span>
             </a>
         {% else %}
-            <a href="{% url 'user:register' %}" class="menu-item">
-                <span style="background-color:rgb(0,145,255); padding:10px; border-radius:10px;">
-                    Зареєструватися
-                </span>
+            <a href="{% url 'user:register' %}" class="menu-item register-btn">
+                Зареєструватися
             </a>
         {% endif %}
-    </div>
+    </aside>
 
+    <!-- Main content -->
     <main class="main-content">
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
 </div>
+
 </body>
 </html>

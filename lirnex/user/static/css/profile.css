@@ -12,7 +12,7 @@
 }
 
 .container {
-    margin-left: 15%;
+    margin-left: 20%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -49,16 +49,19 @@
     /* justify-content: center; */
     /* text-align: center; */
 }
-.button-follow button {
-    padding: 6px 14px;
-    background-color: #0095f6;
-    color: white;
+.button-follow {
+    padding: 8px 18px;
     border: none;
     border-radius: 6px;
-    cursor: pointer;
     font-size: 14px;
-    transition: transform 0.2s, background-color 0.2s;
+    cursor: pointer;
+    border: 1px solid green;
+
+    transition: background 0.2s, color 0.2s, transform 0.1s;
+    margin-top: 10%;
+
 }
+
 
  .posts {
     display: flex;
@@ -116,3 +119,119 @@
     gap: 15px;
 }
 /* При сужении экрана */
+@media (max-width: 1000px) {
+
+    .sidebar {
+        width: 45px;
+        padding-left: 10px;
+    }
+
+    .sidebar .menu-item span {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+    }
+
+    .sidebar .menu-item {
+        justify-content: center;
+    }
+
+    .logo {
+        display: none;
+    }
+}
+
+
+.leave-button {
+    margin-top: 20px;
+    text-align: right; /* можно center / left */
+}
+
+.leave-button button {
+    background-color: #e74c3c;      /* красный */
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.leave-button button:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.leave-button button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+
+
+.btn {
+    display: inline-block;
+    padding: 5px 10px;
+    width: 130px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+
+
+.btn-primary {
+    background-color: #7d8c96;
+    color: #fff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #007fd6;
+    transform: translateY(-1px);
+}
+
+
+.follow-link {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.follow-link:hover {
+    text-decoration: underline;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: #fff;
+    width: 420px;
+    max-height: 70vh;
+    border-radius: 12px;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+#close-modal {
+    float: right;
+    cursor: pointer;
+    font-size: 22px;
+}

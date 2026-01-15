@@ -1,0 +1,74 @@
+{% load static %}
+
+<style>
+.back-btn {
+    margin-top: 12px;
+    display: inline-block;
+    font-size: 14px;
+    color: #555;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: #eaeaea;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.back-btn:hover {
+    background: #ddd;
+}
+
+.user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid hsl(0, 0%, 93%);
+}
+
+.user-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-item a {
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.user-item a:hover {
+    color: #0073e6;
+}
+</style>
+
+<div class="user-list">
+    {% if users %}
+        {% for p in users %}
+            <div class="user-item">
+                {% if p.photo_profile %}
+                    <img src="{{ p.photo_profile.url }}" alt="{{ p.user.username }}">
+                {% else %}
+                    <img src="{% static 'icons/default-avatar.png' %}" alt="{{ p.user.username }}">
+                {% endif %}
+
+                <a href="{% url 'user:profile' p.user.username %}">
+                    {{ p.user.username }}
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Поки що немає користувачів.</p>
+    {% endif %}
+</div>
+
+<a href="javascript:void(0);" class="back-btn" onclick="history.back();">← Повернутись</a>

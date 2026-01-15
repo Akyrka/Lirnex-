@@ -2,8 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile 
-from django.forms.widgets import DateInput
-
+from django.forms.widgets import DateInput, FileInput
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, help_text='Имя')
@@ -12,7 +11,15 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'password1', 'password2')
+
+
 class ProfileForm(forms.ModelForm):
+    # Используем обычный FileInput без чекбокса Clear
+    photo_profile = forms.ImageField(
+        required=False,
+        widget=FileInput(attrs={'class': 'file-input'})
+    )
+
     class Meta:
         model = Profile
         fields = ['photo_profile', 'bio', 'birthday']

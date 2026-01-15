@@ -2,6 +2,7 @@ from django.urls import path
 from .views import CustomLoginView, ProfileUpdateView, RegisterView, UserLogoutView, ProfileView, SearchUsersView, SubscribeView, UnsubscribeView,ProfileListAPI, ProfileDetailAPI
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import followers_list, following_list
 
 
 app_name = "user"
@@ -19,6 +20,12 @@ urlpatterns = [
 
     path('api/profiles/', ProfileListAPI.as_view(), name='profiles-list-api'),
     path('api/profiles/<int:pk>/', ProfileDetailAPI.as_view(), name='profile-detail-api'),
+
+    path('following/<str:username>/', following_list, name="following_list"),
+    path('followers/<str:username>/', followers_list, name="followers_list"),
+
+
+
 ]
 
 

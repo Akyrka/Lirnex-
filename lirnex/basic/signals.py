@@ -6,20 +6,21 @@ from django.db.models.signals import m2m_changed
 from .models import Post, Comment, Notification
 from user.models import Profile  
 
-# 📌 Комментарий
+
 @receiver(post_save, sender=Comment)
 def create_comment_notification(sender, instance, created, **kwargs):
     if created and instance.user != instance.post.author:
         Notification.objects.create(
             to_user=instance.post.author,
-            from_user=instance.user,
+            from_user=instance.user,   # хранится, но не выводится
             notif_type="comment",
             post=instance.post,
-            text=f"{instance.user.username} прокомментировал: {instance.text}"
+            text=instance.text        # ← ТОЛЬКО ТЕКСТ
         )
 
 
-# 📌 Лайк 
+
+
 @receiver(m2m_changed, sender=Post.likes.through)
 def create_like_notification(sender, instance, action, reverse, pk_set, **kwargs):
     if action == "post_add":  # лайк добавлен

@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from django.views.generic import FormView, DetailView, ListView, View, UpdateView
@@ -102,7 +102,7 @@ class SearchUsersView(ListView):
                 Q(user__username__icontains=query) |
                 Q(bio__icontains=query)
             )
-        return models.Profile.objects.none()  # если ничего не введено — пусто
+        return models.Profile.objects.none()  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -118,4 +118,17 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return self.request.user.profile
 
     def get_success_url(self):
-        return self.request.user.profile.get_absolute_url()
+        # Просто указываем URL профиля напрямую
+        return reverse_lazy('user:profile', kwargs={'username': self.request.user.username})
+
+def followers_list(request, username):
+    profile = get_object_or_404(Profile, user__username=username)
+    return render(request, "partials/user_list.html", {
+        "users": profile.followers.all()
+    })
+
+def following_list(request, username):
+    profile = get_object_or_404(Profile, user__username=username)
+    return render(request, "partials/user_list.html", {
+        "users": profile.following.all()
+    })

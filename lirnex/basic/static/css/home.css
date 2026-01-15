@@ -7,10 +7,57 @@ body {
     background: #fafafa;
 }
 
+.heading {
+    display: flex;
+    align-items: center; /* вертикальное выравнивание */
+    justify-content: center; /* горизонтальное выравнивание */
+    margin-bottom: 20px;
+}
+
+.notif{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-left: 150px;
+
+}
+.notif.new {
+    background-color: #f0f8ff; /* светло-голубой фон для новых */
+}
+
+/* Подсветка при наведении */
+.notif:hover {
+    background-color: #e0f0ff;
+}
+
+/* Чтобы иконка и текст были красиво выровнены */
+.notif-back {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* отступ между иконкой и текстом */
+}
+.notif-link {
+    position: relative;
+}
+
+.notif-dot {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    width: 10px;
+    height: 10px;
+    background: red;
+    border-radius: 50%;
+}
+
+
+.feed-container{
+    margin-left: 50px;
+}
 
 .post {
     width: 100%;              /* занимает всю ширину контейнера */
-    max-width: 450px;         /* ограничение, если нужно */
+    max-width: 400px;         /* ограничение, если нужно */
     margin: 0 auto;           /* центрирование */
     overflow: hidden;         /* на всякий случай */
 }
@@ -79,7 +126,7 @@ body {
     object-fit: cover;
 }
 
-@media (max-width: 1010px) {
+@media (max-width: 1000px) {
 
     .sidebar {
         width: 45px;
@@ -100,3 +147,222 @@ body {
         display: none;
     }
 }
+
+.comment-btn {
+    display: inline-block;
+    padding: 6px 10px;
+    /* border: 1px solid #ccc; */
+    border-radius: 6px;
+    text-decoration: none;
+    /* background: #f5f5f5; */
+    color: #000;
+}
+.comment-btn:hover {
+    background: #eaeaea;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: black;
+    padding: 6px 10px;
+    border-radius: 6px;
+
+}
+
+.like-btn.liked {
+    color: red;
+}
+
+.like-btn:hover {
+    background: #eaeaea;
+}
+
+
+/*  Profile Edit  */
+.profile-edit-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.profile-edit-card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.profile-edit-card h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.profile-edit-form .form-group {
+    margin-bottom: 18px;
+}
+
+.profile-edit-form label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.profile-edit-form input,
+.profile-edit-form textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.profile-edit-form textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 10px;
+    background: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background: #007fd4;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    color: #555;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+.avatar-group {
+    text-align: center;
+}
+
+.avatar-preview {
+    margin-bottom: 12px;
+}
+
+.avatar-preview img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+/* input file */
+.avatar-group input[type="file"] {
+    display: block;
+    margin: 0 auto;
+}
+
+
+/* Closed Profile Edit */
+
+
+
+/* Create Post */
+.post-create-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.post-create-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group input[type="file"] {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.media-formset {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+.back-btn-container {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ddd;
+    color: #333;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.back-btn:hover {
+    background-color: #ccc;
+}
+
+.field-errors {
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+.preview-container img {
+    border: 1px solid #ccc;
+}
+/* Closed Post Create */

@@ -10,6 +10,7 @@ from user.models import Profile
 from .forms import PostForm, MediaFormSet
 from django.urls import reverse
 from django.db.models import Q
+from basic.models import Notification
 
 
 
@@ -140,6 +141,7 @@ class AddCommentView(LoginRequiredMixin, View):
             text=text
         )
 
+
         return JsonResponse({
             "id": comment.id,
             "username": request.user.username,
@@ -158,4 +160,5 @@ class DeleteCommentView(LoginRequiredMixin, View):
 class NotificationsView(LoginRequiredMixin, View):
     def get(self, request):
         notifications = request.user.notifications.order_by('-created_at')
+        notifications.filter(is_read=False).update(is_read=True)
         return render(request, "basic/notifications.html", {"notifications": notifications})

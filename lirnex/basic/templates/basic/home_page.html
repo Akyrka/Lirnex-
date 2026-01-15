@@ -4,9 +4,10 @@
 
 {% block content %}
 
-<h3 style="text-align: center;">Пости користувачів, на яких ви підписані</h3>
+
 
 <div class="feed-container">
+<h3 style="text-align: center;">Пости користувачів, на яких ви підписані</h3>
 {% for post in posts %}
 <div class="post">
     <div class="creator">
@@ -31,18 +32,18 @@
     {% endfor %}
     </a>    
     {# Кнопка лайку #}
-    <button class="like-btn" 
-            data-id="{{ post.id }}" 
-            style="color: {% if post.liked_by_user %}red{% else %}black{% endif %};">
+    <button type="button"
+            class="like-btn {% if post.liked_by_user %}liked{% endif %}"
+            data-id="{{ post.id }}">
         ❤️ <span class="like-count">{{ post.likes.count }}</span>
     </button>
-<a href="{% url 'basic:post_detail' post.pk %}" class="post-link">
-    💬 {{ post.comments.count }}
-</a>
 
+    {# Кнопка комментария #}
+    <a href="{% url 'basic:post_detail' post.pk %}" class="post-link comment-btn">
+        💬 {{ post.comments.count }}
+    </a>
 
-
-    <p>{{ post.caption|linebreaks }}</p>
+    {{ post.caption|linebreaks }}
 </div>
 {% empty %}
 <p style="text-align: center;">Поки що немає постів.</p>

@@ -2,26 +2,34 @@
 
 {% block title %}Lirnex{% endblock %}
 
+
+
 {% block content %}
 
-<h2>Уведомления</h2>
+<div class="heading"><h2>Уведомления</h2></div>
 
+<div class="notifications">
 {% for n in notifications %}
-<div style="gap: 18px">
-    <div class="notif {% if not n.is_read %}new{% endif %}">
+<div class="notif {% if not n.is_read %}new{% endif %}">
+    <div class="notif-back">
         {% if n.notif_type == "like" %}
-            ❤️ <a href="{% url 'basic:post_detail' n.post.pk %}">{{ n.from_user.username }}</a> лайкнул ваш пост
+            ❤️ <a href="{% url 'basic:post_detail' n.post.pk %}">{{ n.from_user.username }}  лайкнул ваш пост</a>
         {% elif n.notif_type == "comment" %}
-            💬 <a href="{% url 'basic:post_detail' n.post.pk %}">{{ n.from_user.username }}</a> прокомментировал: {{ n.text }}
+            💬  
+<a href="{% url 'basic:post_detail' n.post.pk %}">
+    {{ n.text }}
+</a>
+
         {% elif n.notif_type == "follow" %}
-            👤 <a href="{% url 'basic:post_detail' n.post.pk %}">{{ n.from_user.username }}</a> подписался на вас
+            👤 <a href="{% url 'user:profile' n.from_user.username %}">{{ n.from_user.username }}  подписался на вас</a>
         {% endif %}
-        <br>
-        <small>{{ n.created_at }}</small>
     </div>
+    <small>  . <strong>{{ n.created_at }}</strong></small>
+</div>
 {% empty %}
-    <p>Пока нет уведомлений</p>
+<p>Пока нет уведомлений</p>
 {% endfor %}
 </div>
+
 
 {% endblock %}

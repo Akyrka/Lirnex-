@@ -10,6 +10,5 @@ class Profile(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
-#class CurrentStories(models.Model):
 
     

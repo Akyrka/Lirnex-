@@ -74,8 +74,3 @@ class Notification(models.Model):
     def __str__(self):
         return f"{self.from_user} → {self.to_user}: {self.notif_type}"
 
-# class Stories(models.Model):
-
-
-# class Reels(models.Model):
-    # video = 

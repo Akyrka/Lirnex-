@@ -5,36 +5,108 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+<style>
+/* Контейнер для аватара с масштабированием */
+.avatar-preview-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 10px auto;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+}
+
+.avatar-preview-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: center center;
+    transition: transform 0.2s ease;
+}
+
+/* Ползунок масштабирования */
+.zoom-slider {
+    width: 100%;
+    margin: 5px 0 15px 0;
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<h2>Редагування профілю</h2>
 
-<form method="POST" enctype="multipart/form-data" class="profile-edit-form">
-    {% csrf_token %}
-    
-    <div style="margin-bottom: 15px;">
-        <label for="id_photo_profile">Фото профілю:</label><br>
-        {{ form.photo_profile }}
+<div class="profile-edit-wrapper">
+    <div class="profile-edit-card">
+
+        <h2>Редагування профілю</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="profile-edit-form">
+            {% csrf_token %}
+
+            <!-- Фото профілю -->
+            <div class="form-group avatar-group">
+                <label>Фото профілю</label>
+
+                <div class="avatar-preview-container">
+                    <img
+                        id="avatarPreview"
+                        src="{{ request.user.profile.photo_profile.url }}"
+                        alt="Avatar">
+                </div>
+                {{ form.photo_profile }}
+            </div>
+
+            <!-- Біо -->
+            <div class="form-group">
+                <label>Біо</label>
+                {{ form.bio }}
+            </div>
+
+            <!-- Дата народження -->
+            <div class="form-group">
+                <label>Дата народження</label>
+                {{ form.birthday }}
+            </div>
+
+            <button type="submit" class="save-btn">
+                Зберегти
+            </button>
+        </form>
+
+        <a href="{% url 'user:profile' request.user.username %}" class="back-link">
+            ← Повернутись до профілю
+        </a>
+
     </div>
+</div>
 
-    <div style="margin-bottom: 15px;">
-        <label for="id_bio">Біо:</label><br>
-        {{ form.bio }}
-    </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.querySelector('input[name="photo_profile"]');
+    const preview = document.getElementById('avatarPreview');
+    const zoomSlider = document.getElementById('zoomSlider');
 
-    <div style="margin-bottom: 15px;">
-        <label for="id_birthday">Дата народження:</label><br>
-        {{ form.birthday }}
-    </div>
+    // Смена файла
+    if (input) {
+        input.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file && file.type.startsWith('image/')) {
+                preview.src = URL.createObjectURL(file);
+            } else {
+                // Если поле очистили, возвращаем текущее значение модели
+                preview.src = "{{ request.user.profile.photo_profile.url }}";
+            }
+        });
+    }
 
-    <button type="submit" style="padding: 8px 15px; background:#0095f6; color:white; border:none; border-radius:5px;">
-        Зберегти
-    </button>
-</form>
-
-<a href="{% url 'user:profile' request.user.username %}" style="display:block; margin-top:20px;">
-    ← Повернутись до профілю
-</a>
+    // Масштабирование через ползунок
+    if (zoomSlider) {
+        zoomSlider.addEventListener('input', function () {
+            preview.style.transform = `scale(${this.value})`;
+        });
+    }
+});
+</script>
 
 {% endblock %}

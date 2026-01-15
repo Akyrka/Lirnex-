@@ -1,10 +1,81 @@
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ media_formset.management_form }}
-    {% for form in media_formset %}
-        {{ form.as_p }}
-    {% endfor %}
-    <button type="submit">Опубліковати</button>
-</form>
-<a href="{% url 'basic:home' %}">повернутись</a>
+{% extends 'basic/home.html' %}
+{% load static %}
+
+{% block title %}Опублікувати пост{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/post_create.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="post-create-container">
+    <h2>Опублікувати новий пост</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="post-form">
+        {% csrf_token %}
+
+        <!-- Поле для подписи -->
+        <div class="form-group">
+            {{ form.caption.label_tag }}
+            {{ form.caption }}
+            {% if form.caption.errors %}
+                <div class="field-errors">{{ form.caption.errors }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Formset для фото -->
+        {{ media_formset.management_form }}
+        <div class="media-formset">
+            {% for media_form in media_formset %}
+                <div class="form-group media-field">
+                    {% for field in media_form.visible_fields %}
+                        {{ field }}
+                        <div class="preview-container"></div>
+                        {% if field.errors %}
+                            <div class="field-errors">{{ field.errors }}</div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="submit-btn">Опублікувати</button>
+    </form>
+
+    <!-- Кнопка "Повернутись" -->
+    <div class="back-btn-container">
+        <a href="{% url 'basic:home' %}" class="back-btn">← Повернутись</a>
+    </div>
+</div>
+
+<!-- JS для превью выбранных фото -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const mediaFields = document.querySelectorAll('.media-field input[type="file"]');
+
+    mediaFields.forEach(input => {
+        input.addEventListener('change', function() {
+            const previewContainer = this.parentElement.querySelector('.preview-container');
+            previewContainer.innerHTML = ''; // очищаем старые превью
+
+            Array.from(this.files).forEach(file => {
+                if(!file.type.startsWith('image/')) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '80px';
+                    img.style.height = '80px';
+                    img.style.objectFit = 'cover';
+                    img.style.marginRight = '10px';
+                    img.style.borderRadius = '6px';
+                    previewContainer.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

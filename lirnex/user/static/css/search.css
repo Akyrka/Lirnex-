@@ -2,3 +2,9 @@
     padding-left: 300px;
     ;
 }
+.search-results img {
+    width: 40px;       /* уже у тебя есть в теге img */
+    height: 40px;      /* чтобы было квадратное изображение */
+    border-radius: 50%; /* делает круглыми */
+    object-fit: cover;  /* чтобы картинка не деформировалась */
+}
