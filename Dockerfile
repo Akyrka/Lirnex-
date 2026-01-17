@@ -10,14 +10,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /app/
-
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
+
+WORKDIR /app/lirnex
 RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-ENTRYPOINT ["gunicorn", "lirnex.wsgi:application", "-b", "0.0.0.0:8000"]
 
+CMD gunicorn lirnex.wsgi:application --bind 0.0.0.0:$PORT
